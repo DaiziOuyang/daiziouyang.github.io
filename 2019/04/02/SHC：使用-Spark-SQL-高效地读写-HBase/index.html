@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="google-site-verification" content="dYiRwj1ulGaUvTQRrCjJA9YKnNF8JN4wRKXzdbE6wBc" />
+  <meta name="msvalidate.01" content="true" />
+  <meta name="yandex-verification" content="true" />
+  <meta name="baidu-site-verification" content="{ theme.baidu_site_verification }" />
+  <meta name="360-site-verification" content="theme.qihu_site_verification" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+  <meta name="keywords" content="HBase,Sql,SHC," />
+  <link rel="alternate" href="/atom.xml" title="欧阳博客" type="application/atom+xml" />
+<meta name="description" content="Apache Spark 和 Apache HBase 是两个使用比较广泛的大数据组件。很多场景需要使用 Spark 分析/查询 HBase 中的数据，而目前 Spark 内置是支持很多数据源的，其中就包括了 HBase，但是内置的读取数据源还是使用了 TableInputFormat 来读取 HBase 中的数据。这个 TableInputFormat 有一些缺点：  一个 Task 里面只能启">
+<meta name="keywords" content="HBase,Sql,SHC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SHC：使用 Spark SQL 高效地读写 HBase">
+<meta property="og:url" content="https://www.5658.pw/2019/04/02/SHC：使用-Spark-SQL-高效地读写-HBase/index.html">
+<meta property="og:site_name" content="欧阳博客">
+<meta property="og:description" content="Apache Spark 和 Apache HBase 是两个使用比较广泛的大数据组件。很多场景需要使用 Spark 分析/查询 HBase 中的数据，而目前 Spark 内置是支持很多数据源的，其中就包括了 HBase，但是内置的读取数据源还是使用了 TableInputFormat 来读取 HBase 中的数据。这个 TableInputFormat 有一些缺点：  一个 Task 里面只能启">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yun.name168.cn/shc_get-5658pw.png">
+<meta property="og:image" content="http://yun.name168.cn/shc_bulkget-5658pw.png">
+<meta property="og:updated_time" content="2019-05-11T04:24:04.525Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SHC：使用 Spark SQL 高效地读写 HBase">
+<meta name="twitter:description" content="Apache Spark 和 Apache HBase 是两个使用比较广泛的大数据组件。很多场景需要使用 Spark 分析/查询 HBase 中的数据，而目前 Spark 内置是支持很多数据源的，其中就包括了 HBase，但是内置的读取数据源还是使用了 TableInputFormat 来读取 HBase 中的数据。这个 TableInputFormat 有一些缺点：  一个 Task 里面只能启">
+<meta name="twitter:image" content="http://yun.name168.cn/shc_get-5658pw.png">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+  <link rel="canonical" href="https://www.5658.pw/2019/04/02/SHC：使用-Spark-SQL-高效地读写-HBase/"/>
+  <title>SHC：使用 Spark SQL 高效地读写 HBase | 欧阳博客</title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">欧阳博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">三分孤独,七分狂傲</h1>
+  </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            首页
+          </a>
+        </li>
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            标签
+          </a>
+        </li>
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            分类
+          </a>
+        </li>
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            归档
+          </a>
+        </li>
+        <li class="menu-item menu-item-resources">
+          <a href="/buddy" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-american-sign-language-interpreting"></i> <br />
+            小伙伴
+          </a>
+        </li>
+        <li class="menu-item menu-item-娱乐">
+          <a href="/entertainment" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br />
+            娱乐
+          </a>
+        </li>
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            关于
+          </a>
+        </li>
+        <li class="menu-item menu-item-search">
+            <a href="javascript:;" class="popup-trigger">
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            搜索
+          </a>
+        </li>
+    </ul>
+    <div class="site-search">
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+    </div>
+</nav>
+ </div>
+    </header>
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+  <div id="posts" class="posts-expand">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.5658.pw/2019/04/02/SHC：使用-Spark-SQL-高效地读写-HBase/">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="欧阳 Blog">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欧阳博客">
+    </span>
+      <header class="post-header">
+          <h2 class="post-title" itemprop="name headline">SHC：使用 Spark SQL 高效地读写 HBase</h2>
+        <div class="post-meta">
+          <span class="post-time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+                <span class="post-meta-item-text">发表于</span>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-02T11:46:56+08:00">
+                2019-04-02
+              </time>
+          </span>
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+                <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HBase/" itemprop="url" rel="index">
+                    <span itemprop="name">HBase</span>
+                  </a>
+                </span>
+            </span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/04/02/SHC：使用-Spark-SQL-高效地读写-HBase/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/04/02/SHC：使用-Spark-SQL-高效地读写-HBase/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+            <div class="post-wordcount">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                <span title="字数统计">
+                  2.5k
+                </span>
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                <span title="阅读时长">
+                  11
+                </span>
+            </div>
+        </div>
+      </header>
+    <div class="post-body" itemprop="articleBody">
+        <p>Apache <a href="https://www.iteblog.com/archives/tag/spark/" target="_blank" rel="noopener">Spark</a> 和 Apache <a href="https://www.iteblog.com/archives/tag/hbase/" target="_blank" rel="noopener">HBase</a> 是两个使用比较广泛的大数据组件。很多场景需要使用 <a href="https://www.iteblog.com/archives/tag/spark/" target="_blank" rel="noopener">Spark</a> 分析/查询 <a href="https://www.iteblog.com/archives/tag/hbase/" target="_blank" rel="noopener">HBase</a> 中的数据，而目前 <a href="https://www.iteblog.com/archives/tag/spark/" target="_blank" rel="noopener">Spark</a> 内置是支持很多数据源的，其中就包括了 <a href="https://www.iteblog.com/archives/tag/hbase/" target="_blank" rel="noopener">HBase</a>，但是内置的读取数据源还是使用了 TableInputFormat 来读取 HBase 中的数据。这个 TableInputFormat 有一些缺点：</p>
+<ul>
+<li>一个 Task 里面只能启动一个 Scan 去 HBase 中读取数据；</li>
+<li>TableInputFormat 中不支持 BulkGet；</li>
+<li>不能享受到 Spark SQL 内置的 catalyst 引擎的优化。</li>
+</ul>
+<p>基于这些问题，来自 Hortonworks 的工程师们为我们带来了全新的 Apache Spark—Apache HBase Connector，下面简称 SHC。通过这个类库，我们可以直接使用 Spark SQL 将 DataFrame 中的数据写入到 HBase 中；而且我们也可以使用 Spark SQL 去查询 HBase 中的数据，在查询 HBase 的时候充分利用了 catalyst 引擎做了许多优化，比如分区修剪（partition pruning），列修剪（column pruning），谓词下推（predicate pushdown）和数据本地性（data locality）等等。因为有了这些优化，通过 Spark 查询 HBase 的速度有了很大的提升。</p>
+<a id="more"></a>
+<p><strong>注意：SHC 同时还提供了将 DataFrame 中的数据直接写入到 HBase 中，但是整个代码并没有什么优化的地方，所以本文对这部分不进行介绍。感兴趣的读者可以直接到这里查看相关写数据到 HBase 的代码。</strong></p>
+<p>文章目录</p>
+<ul>
+<li>1 SHC 是如何实现查询优化的呢<ul>
+<li><a href="https://www.iteblog.com/archives/2522.html#_Rowkey_get" target="_blank" rel="noopener">1.1 将使用 Rowkey 的查询转换成 get 查询</a></li>
+</ul>
+</li>
+<li><a href="https://www.iteblog.com/archives/2522.html#_RowKey" target="_blank" rel="noopener">2 组合 RowKey 的查询优化</a></li>
+<li><a href="https://www.iteblog.com/archives/2522.html#scan" target="_blank" rel="noopener">3 scan 查询优化</a></li>
+</ul>
+<h2 id="SHC-是如何实现查询优化的呢"><a href="#SHC-是如何实现查询优化的呢" class="headerlink" title="SHC 是如何实现查询优化的呢"></a>SHC 是如何实现查询优化的呢</h2><p>SHC 主要使用下面的几种优化，使得 Spark 获取 HBase 的数据扫描范围得到减少，提高了数据读取的效率。</p>
+<h3 id="将使用-Rowkey-的查询转换成-get-查询"><a href="#将使用-Rowkey-的查询转换成-get-查询" class="headerlink" title="将使用 Rowkey 的查询转换成 get 查询"></a>将使用 Rowkey 的查询转换成 get 查询</h3><p>我们都知道，HBase 中使用 Get 查询的效率是非常高的，所以如果查询的过滤条件是针对 RowKey 进行的，那么我们可以将它转换成 Get 查询。为了说明这点，我们使用下面的例子进行说明。假设我们定义好的 HBase catalog 如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`val` `catalog ``=` `s``&quot;&quot;``&quot;&#123;``  ``|&quot;``table``&quot;:&#123;&quot;``namespace``&quot;:&quot;``default``&quot;, &quot;``name``&quot;:&quot;``iteblog``&quot;, &quot;``tableCoder``&quot;:&quot;``PrimitiveType``&quot;&#125;,``  ``|&quot;``rowkey``&quot;:&quot;``key``&quot;,``  ``|&quot;``columns``&quot;:&#123;``    ``|&quot;``col``0``&quot;:&#123;&quot;``cf``&quot;:&quot;``rowkey``&quot;, &quot;``col``&quot;:&quot;``id``&quot;, &quot;``type``&quot;:&quot;``int``&quot;&#125;,``    ``|&quot;``col``1``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``1``&quot;, &quot;``col``&quot;:&quot;``col``1``&quot;, &quot;``type``&quot;:&quot;``boolean``&quot;&#125;,``    ``|&quot;``col``2``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``2``&quot;, &quot;``col``&quot;:&quot;``col``2``&quot;, &quot;``type``&quot;:&quot;``double``&quot;&#125;,``    ``|&quot;``col``3``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``3``&quot;, &quot;``col``&quot;:&quot;``col``3``&quot;, &quot;``type``&quot;:&quot;``float``&quot;&#125;,``    ``|&quot;``col``4``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``4``&quot;, &quot;``col``&quot;:&quot;``col``4``&quot;, &quot;``type``&quot;:&quot;``int``&quot;&#125;,``    ``|&quot;``col``5``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``5``&quot;, &quot;``col``&quot;:&quot;``col``5``&quot;, &quot;``type``&quot;:&quot;``bigint``&quot;&#125;,``    ``|&quot;``col``6``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``6``&quot;, &quot;``col``&quot;:&quot;``col``6``&quot;, &quot;``type``&quot;:&quot;``smallint``&quot;&#125;,``    ``|&quot;``col``7``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``7``&quot;, &quot;``col``&quot;:&quot;``col``7``&quot;, &quot;``type``&quot;:&quot;``string``&quot;&#125;,``    ``|&quot;``col``8``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``8``&quot;, &quot;``col``&quot;:&quot;``col``8``&quot;, &quot;``type``&quot;:&quot;``tinyint``&quot;&#125;``  ``|&#125;``|&#125;&quot;``&quot;&quot;``.stripMargin`</span><br></pre></td></tr></table></figure>
+<p>那么如果有类似下面的查询</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`val` `df ``=` `withCatalog(catalog)``df.createOrReplaceTempView(``&quot;iteblog_table&quot;``)``sqlContext.sql(``&quot;select * from iteblog_table where id = 1&quot;``)``sqlContext.sql(``&quot;select * from iteblog_table where id = 1 or id = 2&quot;``)``sqlContext.sql(``&quot;select * from iteblog_table where id in (1, 2)&quot;``)`</span><br></pre></td></tr></table></figure>
+<p>因为查询条件直接是针对 RowKey 进行的，所以这种情况直接可以转换成 Get 或者 BulkGet 请求的。第一个 SQL 查询过程类似于下面过程</p>
+<p><img src="http://yun.name168.cn/shc_get-5658pw.png" alt="SHC：使用 Spark SQL 高效地读写 HBase"><br>如果想及时了解Spark、Hadoop或者Hbase相关的文章，欢迎关注微信公共帐号：<strong>iteblog_hadoop</strong></p>
+<p>后面两条 SQL 查询其实是等效的，在实现上会把 <code>key in (x1, x2, x3..)</code> 转换成 <code>(key == x1) or (key == x2) or ...</code> 的。整个查询流程如下：</p>
+<p><img src="http://yun.name168.cn/shc_bulkget-5658pw.png" alt="&quot;SHC：使用 Spark SQL 高效地读写 HBase&quot;"></p>
+<p>如果想及时了解Spark、Hadoop或者Hbase相关的文章，欢迎关注微信公共帐号：<strong>iteblog_hadoop</strong></p>
+<p>如果我们的查询里面有 Rowkey 还有其他列的过滤，比如下面的例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`sqlContext.sql(``&quot;select id, col6, col8 from iteblog_table where id = 1 and col7 = &apos;xxx&apos;&quot;``)`</span><br></pre></td></tr></table></figure>
+<p>那么上面的 SQL 翻译成 HBase 的下面查询</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`val` `filter ``=` `new` `SingleColumnValueFilter(``              ``Bytes.toBytes(``&quot;cf7&quot;``), Bytes.toBytes(``&quot;col7 &quot;``)``              ``CompareOp.EQUAL,``             ``Bytes.toBytes(``&quot;xxx&quot;``))` `val` `g ``=` `new` `Get(Bytes.toBytes(``1``))``g.addColumn(Bytes.toBytes(``&quot;cf6&quot;``), Bytes.toBytes(``&quot;col6&quot;``))``g.addColumn(Bytes.toBytes(``&quot;cf8&quot;``), Bytes.toBytes(``&quot;col8&quot;``))``g.setFilter(filter)`</span><br></pre></td></tr></table></figure>
+<p>如果有多个 and 条件，都是使用 <code>SingleColumnValueFilter</code> 进行过滤的，这个都好理解。如果我们有下面的查询</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`sqlContext.sql(``&quot;select id, col6, col8 from iteblog_table where id = 1 or col7 = &apos;xxx&apos;&quot;``)`</span><br></pre></td></tr></table></figure>
+<p>那么在 shc 里面是怎么进行的呢？事实上，如果碰到非 RowKey 的过滤，那么这种查询是需要扫描 HBase 的全表的。上面的查询在 shc 里面就是将 HBase 里面的所有数据拿到，然后<strong>传输到 Spark ，再通过 Spark 里面进行过滤</strong>，可见 shc 在这种情况下效率是很低下的。</p>
+<p>注意，上面的查询在 shc 返回的结果是错误的。具体原因是在将 id = 1 or col7 = ‘xxx’ 查询条件进行合并时，丢弃了所有的查找条件，相当于返回表的所有数据。定位到代码可以参见下面的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`def` `or[T](left``:` `HRF[T],``            ``right``:` `HRF[T])(``implicit` `ordering``:` `Ordering[T])``:` `HRF[T] ``=` `&#123;``    ``val` `ranges ``=` `ScanRange.or(left.ranges, right.ranges)``    ``val` `typeFilter ``=` `TypedFilter.or(left.tf, right.tf)``    ``HRF(ranges, typeFilter, left.handled &amp;&amp; right.handled)``&#125;`</span><br></pre></td></tr></table></figure>
+<p>同理，类似于下面的查询在 shc 里面其实都是全表扫描，并且将所有的数据返回到 Spark 层面上再进行一次过滤。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`sqlContext.sql(``&quot;select id, col6, col8 from iteblog_table where id = 1 or col7 &lt;= &apos;xxx&apos;&quot;``)``sqlContext.sql(``&quot;select id, col6, col8 from iteblog_table where id = 1 or col7 &gt;= &apos;xxx&apos;&quot;``)``sqlContext.sql(``&quot;select id, col6, col8 from iteblog_table where col7 = &apos;xxx&apos;&quot;``)`</span><br></pre></td></tr></table></figure>
+<p>很显然，这种方式查询效率并不高，一种可行的方案是将算子下推到 HBase 层面，在 HBase 层面通过 SingleColumnValueFilter 过滤一部分数据，然后再返回到 Spark，这样可以节省很多数据的传输。</p>
+<h2 id="组合-RowKey-的查询优化"><a href="#组合-RowKey-的查询优化" class="headerlink" title="组合 RowKey 的查询优化"></a>组合 RowKey 的查询优化</h2><p>shc 还支持组合 RowKey 的方式来建表，具体如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`def` `cat ``=``  ``s``&quot;&quot;``&quot;&#123;``     ``|&quot;``table``&quot;:&#123;&quot;``namespace``&quot;:&quot;``default``&quot;, &quot;``name``&quot;:&quot;``iteblog``&quot;, &quot;``tableCoder``&quot;:&quot;``PrimitiveType``&quot;&#125;,``     ``|&quot;``rowkey``&quot;:&quot;``key``1``:``key``2``&quot;,``     ``|&quot;``columns``&quot;:&#123;``     ``|&quot;``col``00``&quot;:&#123;&quot;``cf``&quot;:&quot;``rowkey``&quot;, &quot;``col``&quot;:&quot;``key``1``&quot;, &quot;``type``&quot;:&quot;``string``&quot;, &quot;``length``&quot;:&quot;``6``&quot;&#125;,``     ``|&quot;``col``01``&quot;:&#123;&quot;``cf``&quot;:&quot;``rowkey``&quot;, &quot;``col``&quot;:&quot;``key``2``&quot;, &quot;``type``&quot;:&quot;``int``&quot;&#125;,``     ``|&quot;``col``1``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``1``&quot;, &quot;``col``&quot;:&quot;``col``1``&quot;, &quot;``type``&quot;:&quot;``boolean``&quot;&#125;,``     ``|&quot;``col``2``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``2``&quot;, &quot;``col``&quot;:&quot;``col``2``&quot;, &quot;``type``&quot;:&quot;``double``&quot;&#125;,``     ``|&quot;``col``3``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``3``&quot;, &quot;``col``&quot;:&quot;``col``3``&quot;, &quot;``type``&quot;:&quot;``float``&quot;&#125;,``     ``|&quot;``col``4``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``4``&quot;, &quot;``col``&quot;:&quot;``col``4``&quot;, &quot;``type``&quot;:&quot;``int``&quot;&#125;,``     ``|&quot;``col``5``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``5``&quot;, &quot;``col``&quot;:&quot;``col``5``&quot;, &quot;``type``&quot;:&quot;``bigint``&quot;&#125;,``     ``|&quot;``col``6``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``6``&quot;, &quot;``col``&quot;:&quot;``col``6``&quot;, &quot;``type``&quot;:&quot;``smallint``&quot;&#125;,``     ``|&quot;``col``7``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``7``&quot;, &quot;``col``&quot;:&quot;``col``7``&quot;, &quot;``type``&quot;:&quot;``string``&quot;&#125;,``     ``|&quot;``col``8``&quot;:&#123;&quot;``cf``&quot;:&quot;``cf``8``&quot;, &quot;``col``&quot;:&quot;``col``8``&quot;, &quot;``type``&quot;:&quot;``tinyint``&quot;&#125;``     ``|&#125;``     ``|&#125;&quot;``&quot;&quot;``.stripMargin`</span><br></pre></td></tr></table></figure>
+<p>上面的 col00 和 col01 两列组合成一个 rowkey，并且 col00 排在前面，col01 排在后面。比如 col00 =’row002’，col01 = 2，那么组合的 rowkey 为 row002\x00\x00\x00\x02。那么在组合 Rowkey 的查询 shc 都有哪些优化呢？现在我们有如下查询</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`df.sqlContext.sql(``&quot;select col00, col01, col1 from iteblog where col00 = &apos;row000&apos; and col01 = 0&quot;``).show()`</span><br></pre></td></tr></table></figure>
+<p>根据上面的信息，RowKey 其实是由 col00 和 col01 组合而成的，那么上面的查询其实可以将 col00 和 col01 进行拼接，然后组合成一个 RowKey，然后上面的查询其实可以转换成一个 Get 查询。但是在 shc 里面，上面的查询是转换成一个 scan 和一个 get 查询的。scan 的 startRow 为 row000，endRow 为 row000\xff\xff\xff\xff；get 的 rowkey 为 row000\xff\xff\xff\xff，然后再将所有符合条件的数据返回，最后再在 Spark 层面上做一次过滤，得到最后查询的结果。因为 shc 里面组合键查询的代码还没完善，所以当前实现应该不是最终的。</p>
+<p>在 shc 里面下面两条 SQL 查询下沉到 HBase 的逻辑一致</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`df.sqlContext.sql(``&quot;select col00, col01, col1 from iteblog where col00 = &apos;row000&apos;&quot;``).show()``df.sqlContext.sql(``&quot;select col00, col01, col1 from iteblog where col00 = &apos;row000&apos; and col01 = 0&quot;``).show()`</span><br></pre></td></tr></table></figure>
+<p>唯一区别是在 Spark 层面上的过滤。</p>
+<h2 id="scan-查询优化"><a href="#scan-查询优化" class="headerlink" title="scan 查询优化"></a>scan 查询优化</h2><p>如果我们的查询有 &lt; 或 &gt; 等查询过滤条件，比如下面的查询条件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`df.sqlContext.sql(``&quot;select col00, col01, col1 from iteblog where col00 &gt; &apos;row000&apos; and col00 &lt; &apos;row005&apos;&quot;``).show()`</span><br></pre></td></tr></table></figure>
+<p>这个在 shc 里面转换成 HBase 的过滤为一条 get 和 一个 scan，具体为 get 的 Rowkey 为 row0005\xff\xff\xff\xff；scan 的 startRow 为 row000，endRow 为 row005\xff\xff\xff\xff，然后将查询的结果返回到 spark 层面上进行过滤。</p>
+<p>总体来说，shc 能在一定程度上对查询进行优化，避免了全表扫描。但是经过评测，shc 其实还有很多地方不够完善，算子下沉并没有下沉到 HBase 层面上进行。目前这个项目正在和 hbase 自带的 connectors 进行整合</p>
+    </div>
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="欧阳 Blog 微信支付"/>
+        <p>微信支付</p>
+      </div>
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="欧阳 Blog 支付宝"/>
+        <p>支付宝</p>
+      </div>
+  </div>
+</div>
+      </div>
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    欧阳 Blog
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.5658.pw/2019/04/02/SHC：使用-Spark-SQL-高效地读写-HBase/" title="SHC：使用 Spark SQL 高效地读写 HBase">https://www.5658.pw/2019/04/02/SHC：使用-Spark-SQL-高效地读写-HBase/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://5658.pw" rel="external nofollow" target="_blank">CC BY-OuYang</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+      </div>
+    <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/HBase/" rel="tag"># HBase</a>
+            <a href="/tags/Sql/" rel="tag"># Sql</a>
+            <a href="/tags/SHC/" rel="tag"># SHC</a>
+        </div>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/2019/03/25/Centos7-mysql-5-6-数据库主主复制/" rel="next" title="Centos7 mysql 5.6 数据库主主复制">
+                <i class="fa fa-chevron-left"></i> Centos7 mysql 5.6 数据库主主复制
+              </a>
+          </div>
+          <span class="post-nav-divider"></span>
+          <div class="post-nav-prev post-nav-item">
+              <a href="/2019/04/03/Redis批量getshell的方法/" rel="prev" title="Redis批量getshell的方法">
+                Redis批量getshell的方法 <i class="fa fa-chevron-right"></i>
+              </a>
+          </div>
+        </div>
+    </footer>
+  </div>
+  </article>
+    <div class="post-spread">
+    </div>
+  </div>
+          </div>
+    <div class="comments" id="comments">
+    </div>
+        </div>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+	<a href="/">
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="欧阳 Blog" />
+	</a>
+              <p class="site-author-name" itemprop="name">欧阳 Blog</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+          <nav class="site-state motion-element">
+              <div class="site-state-item site-state-posts">
+                <a href="/archives/">
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">64</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+          </nav>
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+            <div class="links-of-author motion-element">
+                  <span class="links-of-author-item">
+                    <a href="https://www.5658.pw" target="_blank" title="QQ">
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                  <span class="links-of-author-item">
+                    <a href="mailto:dash6@foxmail.com" target="_blank" title="E-Mail">
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+            </div>
+        </div>
+      </section>
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SHC-是如何实现查询优化的呢"><span class="nav-number">1.</span> <span class="nav-text">SHC 是如何实现查询优化的呢</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#将使用-Rowkey-的查询转换成-get-查询"><span class="nav-number">1.1.</span> <span class="nav-text">将使用 Rowkey 的查询转换成 get 查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合-RowKey-的查询优化"><span class="nav-number">2.</span> <span class="nav-text">组合 RowKey 的查询优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#scan-查询优化"><span class="nav-number">3.</span> <span class="nav-text">scan 查询优化</span></a></li></ol></div>
+          </div>
+        </section>
+      <!--/noindex-->
+    </div>
+  </aside>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+  bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+      <div class="footer-inner">
+		<div>
+  <span>Hosted by <a href="https://pages.coding.me" >Coding Pages</a></span>
+</div>
+        <div>
+		 <span id="runtime_span"></span>
+         <script type="text/javascript">function show_runtime(){window.setTimeout("show_runtime()",1000);X=new 
+          Date("9/01/2017 5:22:00");
+          Y=new Date();T=(Y.getTime()-X.getTime());M=24*60*60*1000;
+          a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);
+          runtime_span.innerHTML="本站勉强运行: "+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script>
+</div>
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="heart">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">欧阳 Blog</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    <span title="Site words total count">34.8k</span>
+</div>
+        <div>
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1275871225'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s5.cnzz.com/z_stat.php%3Fid%3D1275871225%26online%3D1%26show%3Dline' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+          <span id="scrollpercent"><span>0</span>%</span>
+      </div>
+  </div>
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+    <script id="ribbon" type="text/javascript" size="300" alpha="0.6"  zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: true,
+        notify: true,
+        appId: 'M3FIsxHra6LzE1oYaCEKcSm9-gzGzoHsz',
+        appKey: 'QRxIrvy1hxfH540G2W01l5xk',
+        placeholder: 'Just Go Go ~~~',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+                // show search results
+                if (isMatch) {
+                  // sort index by position of keyword
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+                  // merge hits into slices
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+                      // move to next position of hit
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+                  // sort slices in content by search text's count and hits' count
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+                  // select top N slices in content
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+                  // highlight title and content
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+                  var resultItem = '';
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+          proceedsearch();
+        }
+      });
+    }
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+     <script>var OriginTitile=document.title; var st; document.addEventListener('visibilitychange',function(){ if(document.hidden){ document.title="(つェ⊂)浏览器崩溃了"; clearTimeout(st); console.log('hide'); }else{ document.title='(*´∇｀*)吖~又好了~ '+OriginTitile; console.log('show'); st=setTimeout(function(){ document.title=OriginTitile; },2000); console.log('endChange='); } });</script>
+   <script>(function(){
+	var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?a03b6dd0b165fe598b2e4f4f456fccda":"https://jspassport.ssl.qhimg.com/11.0.1.js?a03b6dd0b165fe598b2e4f4f456fccda";
+	document.write('<script src="' + src + '" id="sozz"><\/script>');
+	})();
+	</script>
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":50,"height":100},"mobile":{"show":false},"log":false});</script></body>
+</html>
