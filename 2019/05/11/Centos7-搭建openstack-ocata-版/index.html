@@ -1,26 +1,98 @@
 <!DOCTYPE html>
+
+
+
+  
+
+
 <html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
 <meta http-equiv="Cache-Control" content="no-transform" />
 <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
   <meta name="google-site-verification" content="dYiRwj1ulGaUvTQRrCjJA9YKnNF8JN4wRKXzdbE6wBc" />
+
+
+
   <meta name="msvalidate.01" content="true" />
+
+
+
   <meta name="yandex-verification" content="true" />
+
+
+
+
   <meta name="baidu-site-verification" content="{ theme.baidu_site_verification }" />
+
+
+
+
   <meta name="360-site-verification" content="theme.qihu_site_verification" />
+
+
+
+
+  
+  
   <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
 <link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
 <link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
   <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
   <meta name="keywords" content="欧阳博客, 欧阳Blog,欧阳seo,www.5658.pw,5658,5658.pw,欧阳,欧阳博客,欧阳SEO,欧阳网络,ddos,黑客,欧阳工作室,欧阳社区,欧阳论坛,欧阳家族,欧阳,挖矿" />
+
+
+
+
+
   <link rel="alternate" href="/atom.xml" title="欧阳博客" type="application/atom+xml" />
+
+
+
+
+
+
 <meta name="description" content="一、openstack 介绍 123456789101112131415161718192021OpenStack是一个由NASA（美国国家航空航天局）和Rackspace合作研发并发起的，以Apache许可证授权的自由软件和开放源代码项目。OpenStack是一个开源的云计算管理平台项目，由几个主要的组件组合起来完成具体工作。OpenStack支持几乎所有类型的云环境，项目目标是提供实施简单、可">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Centos7 搭建openstack ocata 版">
@@ -42,6 +114,9 @@
 <meta name="twitter:title" content="Centos7 搭建openstack ocata 版">
 <meta name="twitter:description" content="一、openstack 介绍 123456789101112131415161718192021OpenStack是一个由NASA（美国国家航空航天局）和Rackspace合作研发并发起的，以Apache许可证授权的自由软件和开放源代码项目。OpenStack是一个开源的云计算管理平台项目，由几个主要的组件组合起来完成具体工作。OpenStack支持几乎所有类型的云环境，项目目标是提供实施简单、可">
 <meta name="twitter:image" content="http://yun.name168.cn/OpenStack001.png">
+
+
+
 <script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
@@ -65,15 +140,41 @@
     }
   };
 </script>
+
+
+
   <link rel="canonical" href="https://www.5658.pw/2019/05/11/Centos7-搭建openstack-ocata-版/"/>
+
+
+
+
+
   <title>Centos7 搭建openstack ocata 版 | 欧阳博客</title>
+  
+
+
+
+
+
+
+
+
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
   <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
+
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
+    
+
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
@@ -81,8 +182,11 @@
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
+      
         <h1 class="site-subtitle" itemprop="description">三分孤独,七分狂傲</h1>
+      
   </div>
+
   <div class="site-nav-toggle">
     <button>
       <span class="btn-bar"></span>
@@ -91,58 +195,102 @@
     </button>
   </div>
 </div>
+
 <nav class="site-nav">
+  
+
+  
     <ul id="menu" class="menu">
+      
+        
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
+            
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
             首页
           </a>
         </li>
+      
+        
         <li class="menu-item menu-item-tags">
           <a href="/tags/" rel="section">
+            
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
             标签
           </a>
         </li>
+      
+        
         <li class="menu-item menu-item-categories">
           <a href="/categories/" rel="section">
+            
               <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
             分类
           </a>
         </li>
+      
+        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
+            
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
             归档
           </a>
         </li>
+      
+        
         <li class="menu-item menu-item-resources">
           <a href="/buddy" rel="section">
+            
               <i class="menu-item-icon fa fa-fw fa-american-sign-language-interpreting"></i> <br />
+            
             小伙伴
           </a>
         </li>
+      
+        
         <li class="menu-item menu-item-娱乐">
           <a href="/entertainment" rel="section">
+            
               <i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br />
+            
             娱乐
           </a>
         </li>
+      
+        
         <li class="menu-item menu-item-about">
           <a href="/about/" rel="section">
+            
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
             关于
           </a>
         </li>
+      
+
+      
         <li class="menu-item menu-item-search">
+          
             <a href="javascript:;" class="popup-trigger">
+          
+            
               <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
             搜索
           </a>
         </li>
+      
     </ul>
+  
+
+  
     <div class="site-search">
+      
   <div class="popup search-popup local-search-popup">
   <div class="local-search-header clearfix">
     <span class="search-icon">
@@ -159,38 +307,87 @@
   </div>
   <div id="local-search-result"></div>
 </div>
+
+
+
     </div>
+  
 </nav>
+
+
+
  </div>
     </header>
+
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
           <div id="content" class="content">
+            
+
   <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
   <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.5658.pw/2019/05/11/Centos7-搭建openstack-ocata-版/">
+
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="欧阳 Blog">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.png">
     </span>
+
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="欧阳博客">
     </span>
+
+    
       <header class="post-header">
+
+        
+        
           <h2 class="post-title" itemprop="name headline">Centos7 搭建openstack ocata 版</h2>
+        
+
         <div class="post-meta">
           <span class="post-time">
+            
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
+              
                 <span class="post-meta-item-text">发表于</span>
+              
               <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-11T13:21:57+08:00">
                 2019-05-11
               </time>
+            
+
+            
+
+            
           </span>
+ 
+
+
+             
+
+
+          
+          
+
+          
+            
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
@@ -200,30 +397,67 @@
                   <span class="post-comments-count valine-comment-count" data-xid="/2019/05/11/Centos7-搭建openstack-ocata-版/" itemprop="commentCount"></span>
                 </a>
               </span>
+            
+          
+
+          
+          
+
+          
             <span class="post-meta-divider">|</span>
             <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
             <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
             </span>
+          
+
+          
             <div class="post-wordcount">
+              
+                
                 <span class="post-meta-item-icon">
                   <i class="fa fa-file-word-o"></i>
                 </span>
+                
                   <span class="post-meta-item-text">字数统计&#58;</span>
+                
                 <span title="字数统计">
                   8.4k
                 </span>
+              
+
+              
                 <span class="post-meta-divider">|</span>
+              
+
+              
                 <span class="post-meta-item-icon">
                   <i class="fa fa-clock-o"></i>
                 </span>
+                
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
                 <span title="阅读时长">
                   44
                 </span>
+              
             </div>
+          
+
+          
+
         </div>
       </header>
+    
+
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
         <p><strong>一、openstack 介绍</strong></p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">OpenStack是一个由NASA（美国国家航空航天局）和Rackspace合作研发并发起的，以Apache许可证授权的自由软件和开放源代码项目。</span><br><span class="line"></span><br><span class="line">OpenStack是一个开源的云计算管理平台项目，由几个主要的组件组合起来完成具体工作。OpenStack支持几乎所有类型的云环境，</span><br><span class="line"></span><br><span class="line">项目目标是提供实施简单、可大规模扩展、丰富、标准统一的云计算管理平台。OpenStack通过各种互补的服务提供了基础设施即服务（IaaS）的解决方案，</span><br><span class="line"></span><br><span class="line">每个服务提供API以进行集成。</span><br><span class="line"></span><br><span class="line">OpenStack是一个旨在为公共及私有云的建设与管理提供软件的开源项目。它的社区拥有超过<span class="number">130</span>家企业及<span class="number">1350</span>位开发者，</span><br><span class="line"></span><br><span class="line">这些机构与个人都将OpenStack作为基础设施即服务（IaaS）资源的通用前端。OpenStack项目的首要任务是简化云的部署过程并为其带来良好的可扩展性。</span><br><span class="line"></span><br><span class="line">本文希望通过提供必要的指导信息，帮助大家利用OpenStack前端来设置及管理自己的公共云或私有云。</span><br><span class="line"></span><br><span class="line">OpenStack云计算平台，帮助服务商和企业内部实现类似于 Amazon EC2 和 S3 的云基础架构服务(Infrastructure <span class="keyword">as</span> a Service, IaaS)。</span><br><span class="line"></span><br><span class="line">OpenStack 包含两个主要模块：Nova 和 Swift，前者是 NASA 开发的虚拟服务器部署和业务计算模块；后者是 Rackspace开发的分布式云存储模块，</span><br><span class="line"></span><br><span class="line">两者可以一起用，也可以分开单独用。OpenStack除了有 Rackspace 和 NASA 的大力支持外，还有包括 Dell、Citrix、 Cisco、 Canonical等重量级公司的贡献和支持，</span><br><span class="line"></span><br><span class="line">发展速度非常快，有取代另一个业界领先开源云平台 Eucalyptus 的态势。</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
@@ -496,7 +730,16 @@
 <p><img src="http://yun.name168.cn/OpenStack008.png" alt="&quot;OpenStack&quot;"></p>
 <p><img src="http://yun.name168.cn/OpenStack009.png" alt="&quot;OpenStack&quot;"></p>
 <p>只要等它安装完就够了。</p>
+
+      
     </div>
+    
+    
+    
+
+    
+
+    
       <div>
         <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
   <div></div>
@@ -504,17 +747,30 @@
     <span>打赏</span>
   </button>
   <div id="QR" style="display: none;">
+
+    
       <div id="wechat" style="display: inline-block">
         <img id="wechat_qr" src="/images/wechatpay.png" alt="欧阳 Blog 微信支付"/>
         <p>微信支付</p>
       </div>
+    
+
+    
       <div id="alipay" style="display: inline-block">
         <img id="alipay_qr" src="/images/alipay.jpg" alt="欧阳 Blog 支付宝"/>
         <p>支付宝</p>
       </div>
+    
+
+    
+
   </div>
 </div>
+
       </div>
+    
+
+    
       <div>
         <ul class="post-copyright">
   <li class="post-copyright-author">
@@ -530,28 +786,69 @@
     本博客所有文章除特别声明外，均采用 <a href="https://5658.pw" rel="external nofollow" target="_blank">CC BY-OuYang</a> 许可协议。转载请注明出处！
   </li>
 </ul>
+
       </div>
+    
+
     <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
+            
               <a href="/2019/05/11/我的CSP绕过思路及总结/" rel="next" title="我的CSP绕过思路及总结">
                 <i class="fa fa-chevron-left"></i> 我的CSP绕过思路及总结
               </a>
+            
           </div>
+
           <span class="post-nav-divider"></span>
+
           <div class="post-nav-prev post-nav-item">
+            
           </div>
         </div>
+      
+
+      
+      
     </footer>
   </div>
+  
+  
+  
   </article>
+
+
+
     <div class="post-spread">
+      
     </div>
   </div>
+
+
           </div>
+          
+
+
+          
+
+  
     <div class="comments" id="comments">
     </div>
+  
+
+
+
         </div>
+        
+          
+  
   <div class="sidebar-toggle">
     <div class="sidebar-toggle-line-wrap">
       <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
@@ -559,8 +856,14 @@
       <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
   </div>
+
   <aside id="sidebar" class="sidebar">
+    
     <div class="sidebar-inner">
+
+      
+
+      
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
@@ -569,66 +872,125 @@
             站点概览
           </li>
         </ul>
+      
+
       <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
 	<a href="/">
               <img class="site-author-image" itemprop="image"
                 src="/images/avatar.png"
                 alt="欧阳 Blog" />
 	</a>
+            
               <p class="site-author-name" itemprop="name">欧阳 Blog</p>
               <p class="site-description motion-element" itemprop="description"></p>
           </div>
+
           <nav class="site-state motion-element">
+
+            
               <div class="site-state-item site-state-posts">
+              
                 <a href="/archives/">
+              
                   <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
+            
+
+            
+              
+              
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
                   <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
+            
+
+            
+              
+              
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
                   <span class="site-state-item-count">64</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
+            
+
           </nav>
+
+          
             <div class="feed-link motion-element">
               <a href="/atom.xml" rel="alternate">
                 <i class="fa fa-rss"></i>
                 RSS
               </a>
             </div>
+          
+
+          
             <div class="links-of-author motion-element">
+                
                   <span class="links-of-author-item">
                     <a href="https://www.5658.pw" target="_blank" title="QQ">
+                      
                         <i class="fa fa-fw fa-qq"></i>QQ</a>
                   </span>
+                
                   <span class="links-of-author-item">
                     <a href="mailto:dash6@foxmail.com" target="_blank" title="E-Mail">
+                      
                         <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
                   </span>
+                
             </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
         </div>
       </section>
+
+      
       <!--noindex-->
         <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
           <div class="post-toc">
+
+            
+              
+            
+
+            
               <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#二、基础环境"><span class="nav-number">1.</span> <span class="nav-text">二、基础环境</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-时间同步（node1-node2-操作）"><span class="nav-number">1.1.</span> <span class="nav-text">2.1 时间同步（node1 +node2 操作）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-安装mysql（node2主控制节点操作）"><span class="nav-number">1.2.</span> <span class="nav-text">2.2 安装mysql（node2主控制节点操作）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-安装消息队列（node2控制节点操作）"><span class="nav-number">1.3.</span> <span class="nav-text">2.3 安装消息队列（node2控制节点操作）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、搭建openstack"><span class="nav-number">2.</span> <span class="nav-text">三、搭建openstack</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-安装keystone-组件介绍"><span class="nav-number">2.1.</span> <span class="nav-text">3.1 安装keystone 组件介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-安装keystone-组件（node2-主控制节点操作）"><span class="nav-number">2.2.</span> <span class="nav-text">3.2 安装keystone 组件（node2 主控制节点操作）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-1修改配置文件"><span class="nav-number">2.2.1.</span> <span class="nav-text">3.2.1修改配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-2同步数据库"><span class="nav-number">2.2.2.</span> <span class="nav-text">3.2.2同步数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-3配置memcache的配置-（-etc-sysconfig-memcached-）"><span class="nav-number">2.2.3.</span> <span class="nav-text">3.2.3配置memcache的配置 （**/etc/sysconfig/memcached**）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-4启动memcache"><span class="nav-number">2.2.4.</span> <span class="nav-text">3.2.4启动memcache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-5设置apache"><span class="nav-number">2.2.5.</span> <span class="nav-text">3.2.5设置apache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-6修改主apache的主配置文件"><span class="nav-number">2.2.6.</span> <span class="nav-text">3.2.6修改主apache的主配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-7启动apache"><span class="nav-number">2.2.7.</span> <span class="nav-text">3.2.7启动apache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-8检查一下是否启动成功了"><span class="nav-number">2.2.8.</span> <span class="nav-text">3.2.8检查一下是否启动成功了</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-keystone-用户权限"><span class="nav-number">2.3.</span> <span class="nav-text">3.3   keystone 用户权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-1-设置环境变量"><span class="nav-number">2.3.1.</span> <span class="nav-text">3.3.1 设置环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-2创建域、项目、用户和角色"><span class="nav-number">2.3.2.</span> <span class="nav-text">3.3.2创建域、项目、用户和角色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-3-验证操作"><span class="nav-number">2.3.3.</span> <span class="nav-text">3.3.3**验证操作**</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-4-创建-OpenStack-客户端环境脚本"><span class="nav-number">2.3.4.</span> <span class="nav-text">3.3.4**创建 OpenStack 客户端环境脚本**</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-：镜像服务-Glance（node2-主控制节点操作）"><span class="nav-number">2.4.</span> <span class="nav-text">四**：镜像服务**Glance（node2 主控制节点操作）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Glance-介绍"><span class="nav-number">2.4.1.</span> <span class="nav-text">4.1 Glance 介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-mysql-配置"><span class="nav-number">2.4.2.</span> <span class="nav-text">4.2 mysql 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-Glance安装"><span class="nav-number">2.4.3.</span> <span class="nav-text">4.3 Glance安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4修改主配置文件-etc-glance-glance-api-conf"><span class="nav-number">2.4.4.</span> <span class="nav-text">4.4修改主配置文件**/etc/glance/glance-api.conf**</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-修改主配置文件-etc-glance-glance-registry-conf"><span class="nav-number">2.4.5.</span> <span class="nav-text">4.5 修改主配置文件**/etc/glance/glance-registry.conf**</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-设置数据库"><span class="nav-number">2.4.6.</span> <span class="nav-text">4.6 设置数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-7创建镜像服务的API服务"><span class="nav-number">2.4.7.</span> <span class="nav-text">4.7创建镜像服务的API服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-8-启动服务"><span class="nav-number">2.4.8.</span> <span class="nav-text">4.8 启动服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-9验证"><span class="nav-number">2.4.9.</span> <span class="nav-text">4.9验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、计算服务一-nova（node2控制节点操作）"><span class="nav-number">2.5.</span> <span class="nav-text">五、计算服务一 nova（node2控制节点操作）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-N-ova-作用"><span class="nav-number">2.5.1.</span> <span class="nav-text">5 .**N**ova 作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-新建数据库"><span class="nav-number">2.5.2.</span> <span class="nav-text">5.1 新建数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-创建nova用户："><span class="nav-number">2.5.3.</span> <span class="nav-text">5.2**创建nova用户：**</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3创建nova服务实体"><span class="nav-number">2.5.4.</span> <span class="nav-text">5.3创建nova服务实体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4创建服务API"><span class="nav-number">2.5.5.</span> <span class="nav-text">5.4创建服务API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5新建另一个用户"><span class="nav-number">2.5.6.</span> <span class="nav-text">5.5新建另一个用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-在服务目录中创建Placement-API条目："><span class="nav-number">2.5.7.</span> <span class="nav-text">5.6**在服务目录中创建Placement API条目：**</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7-创建Placement-API服务端点："><span class="nav-number">2.5.8.</span> <span class="nav-text">5.7**创建Placement API服务端点：**</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-8-安装和配置的部件"><span class="nav-number">2.5.9.</span> <span class="nav-text">5.8**安装和配置的部件**</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-9修改配置文件-etc-nova-nova-conf"><span class="nav-number">2.5.10.</span> <span class="nav-text">5.9修改配置文件 /etc/nova/nova.conf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-10设置api和连接信息"><span class="nav-number">2.5.11.</span> <span class="nav-text">5.10设置api和连接信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-11设置glance"><span class="nav-number">2.5.12.</span> <span class="nav-text">5.11设置glance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-12设置-oslo-concurrency"><span class="nav-number">2.5.13.</span> <span class="nav-text">5.12设置**[oslo_concurrency]**</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-13设置-placement"><span class="nav-number">2.5.14.</span> <span class="nav-text">5.13设置**[placement]**</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-14设置apache"><span class="nav-number">2.5.15.</span> <span class="nav-text">5.14设置apache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-15重启apache"><span class="nav-number">2.5.16.</span> <span class="nav-text">5.15重启apache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-17验证"><span class="nav-number">2.5.17.</span> <span class="nav-text">5.17验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、计算服务二-nova（node1计算节点操作）"><span class="nav-number">2.6.</span> <span class="nav-text">六、计算服务二  nova（node1计算节点操作）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1安装nova-compute"><span class="nav-number">2.6.1.</span> <span class="nav-text">6.1安装nova-compute</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2配置主配置文件（-etc-nova-nova-conf-）"><span class="nav-number">2.6.2.</span> <span class="nav-text">6.2配置主配置文件（**/etc/nova/nova.conf**）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3检查是否需要硬件加速"><span class="nav-number">2.6.3.</span> <span class="nav-text">6.3检查是否需要硬件加速</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4启动服务"><span class="nav-number">2.6.4.</span> <span class="nav-text">6.4启动服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5验证-node2-主节点操作"><span class="nav-number">2.6.5.</span> <span class="nav-text">6.5验证(node2 主节点操作)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、网络节点一（node2-主控制节点操作）"><span class="nav-number">2.7.</span> <span class="nav-text">七、网络节点一（node2 主控制节点操作）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-设置mysql"><span class="nav-number">2.7.1.</span> <span class="nav-text">7.1 设置mysql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-创建服务凭据"><span class="nav-number">2.7.2.</span> <span class="nav-text">7.2**创建服务凭据**</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-配置网络选项-（这里我选用的是网络1-的配置）"><span class="nav-number">2.7.3.</span> <span class="nav-text">7.3**配置网络选项**（这里我选用的是网络1 的配置）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-安装网络openstack-neutron"><span class="nav-number">2.7.4.</span> <span class="nav-text">7.4 安装网络openstack-neutron</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-编辑-etc-neutron-neutron-conf"><span class="nav-number">2.7.5.</span> <span class="nav-text">7.5 编辑/etc/neutron/neutron.conf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-6-配置模块化层2（ML2）插件（-etc-neutron-plugins-ml2-ml2-conf-ini-）"><span class="nav-number">2.7.6.</span> <span class="nav-text">7.6**配置模块化层2（ML2）插件（/etc/neutron/plugins/ml2/ml2_conf.ini**）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-7-配置Linux网桥代理（-etc-neutron-plugins-ml2-linuxbridge-agent-ini-）"><span class="nav-number">2.7.7.</span> <span class="nav-text">7.7**配置Linux网桥代理（/etc/neutron/plugins/ml2/linuxbridge_agent.ini**）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-8-配置DHCP代理（-etc-neutron-dhcp-agent-ini-）"><span class="nav-number">2.7.8.</span> <span class="nav-text">7.8**配置DHCP代理（/etc/neutron/dhcp_agent.ini**）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-9-配置计算服务以使用网络服务（-etc-nova-nova-conf-）"><span class="nav-number">2.7.9.</span> <span class="nav-text">7.9**配置计算服务以使用网络服务（/etc/nova/nova.conf**）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-10同步数据库"><span class="nav-number">2.7.10.</span> <span class="nav-text">7.10同步数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-10-启动服务"><span class="nav-number">2.7.11.</span> <span class="nav-text">7.10 启动服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八、网络节点二、（node1-计算节点操作）"><span class="nav-number">2.8.</span> <span class="nav-text">八、网络节点二、（node1 计算节点操作）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-安装openstack-neutron"><span class="nav-number">2.8.1.</span> <span class="nav-text">8.1 安装openstack-neutron</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-配置通用组件（-etc-neutron-neutron-conf-）"><span class="nav-number">2.8.2.</span> <span class="nav-text">8.2**配置通用组件（/etc/neutron/neutron.conf**）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-配置计算服务以使用网络服务（-etc-nova-nova-conf-）"><span class="nav-number">2.8.3.</span> <span class="nav-text">8.3**配置计算服务以使用网络服务（/etc/nova/nova.conf**）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-4-配置Linux网桥代理（-etc-neutron-plugins-ml2-linuxbridge-agent-ini-）"><span class="nav-number">2.8.4.</span> <span class="nav-text">8.4**配置Linux网桥代理（/etc/neutron/plugins/ml2/linuxbridge_agent.ini**）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-5-启动服务"><span class="nav-number">2.8.5.</span> <span class="nav-text">8.5 启动服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-6-验证操作"><span class="nav-number">2.8.6.</span> <span class="nav-text">8.6 验证操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#九、-Dashboard-（node2控制节点操作）"><span class="nav-number">2.9.</span> <span class="nav-text">九、**Dashboard**（node2控制节点操作）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-安装"><span class="nav-number">2.9.1.</span> <span class="nav-text">9.1 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2配置主配置文件（-etc-openstack-dashboard-local-settings-）"><span class="nav-number">2.9.2.</span> <span class="nav-text">9.2配置主配置文件（**/etc/openstack-dashboard/local_settings**）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-4重启服务"><span class="nav-number">2.9.3.</span> <span class="nav-text">9.4重启服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-5-访问openstack"><span class="nav-number">2.9.4.</span> <span class="nav-text">9.5 访问openstack</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十、启动第一个实例"><span class="nav-number">2.10.</span> <span class="nav-text">十、启动第一个实例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-创建第一个实例"><span class="nav-number">2.10.1.</span> <span class="nav-text">10.1 创建第一个实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-生成一个密钥对"><span class="nav-number">2.10.2.</span> <span class="nav-text">10.2**生成一个密钥对**</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-3创建一个icmp"><span class="nav-number">2.10.3.</span> <span class="nav-text">10.3创建一个icmp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-4创建网络"><span class="nav-number">2.10.4.</span> <span class="nav-text">10.4创建网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-5创建子网"><span class="nav-number">2.10.5.</span> <span class="nav-text">10.5创建子网</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-6创建虚拟机"><span class="nav-number">2.10.6.</span> <span class="nav-text">10.6创建虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-7网页查看"><span class="nav-number">2.10.7.</span> <span class="nav-text">10.7网页查看</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-8-测试网络连通性"><span class="nav-number">2.10.8.</span> <span class="nav-text">10.8 测试网络连通性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-9-S-sh连接测试一下"><span class="nav-number">2.10.9.</span> <span class="nav-text">10.9 S**sh连接测试一下**</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十一、块存储服务（控制节点node2-操作）"><span class="nav-number">2.11.</span> <span class="nav-text">十一、块存储服务（控制节点node2 操作）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#11-1-数据库操作"><span class="nav-number">2.11.1.</span> <span class="nav-text">11.1 数据库操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-2-创建服务凭据"><span class="nav-number">2.11.2.</span> <span class="nav-text">11.2**创建服务凭据**</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-3-创建cinderv2和cinderv3服务实体："><span class="nav-number">2.11.3.</span> <span class="nav-text">11.3 创建cinderv2和cinderv3服务实体：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-4建立快存储API"><span class="nav-number">2.11.4.</span> <span class="nav-text">11.4建立快存储API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-5-安装cinder"><span class="nav-number">2.11.5.</span> <span class="nav-text">11.5 安装cinder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-6配置cinder（-etc-cinder-cinder-conf-）"><span class="nav-number">2.11.6.</span> <span class="nav-text">11.6配置cinder（**/etc/cinder/cinder.conf**）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-7-填充数据库"><span class="nav-number">2.11.7.</span> <span class="nav-text">11.7 填充数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-8-完成安装"><span class="nav-number">2.11.8.</span> <span class="nav-text">11.8**完成安装**</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十二、块存储服务（可以新开一台机器也可以使用计算节点，我这里使用的计算节点node1）"><span class="nav-number">2.12.</span> <span class="nav-text">十二、块存储服务（可以新开一台机器也可以使用计算节点，我这里使用的计算节点node1）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#12-1-安装lvm"><span class="nav-number">2.12.1.</span> <span class="nav-text">12.1 安装lvm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-2配置lvm"><span class="nav-number">2.12.2.</span> <span class="nav-text">12.2配置lvm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-3-安装和配置的部件"><span class="nav-number">2.12.3.</span> <span class="nav-text">12.3**安装和配置的部件**</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-4配置主配置文件（-etc-cinder-cinder-conf-）"><span class="nav-number">2.12.4.</span> <span class="nav-text">12.4配置主配置文件（**/etc/cinder/cinder.conf**）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-5-启动"><span class="nav-number">2.12.5.</span> <span class="nav-text">12.5 启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-7-创建块存储"><span class="nav-number">2.12.6.</span> <span class="nav-text">12.7 创建块存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-7-将卷附加到实例"><span class="nav-number">2.12.7.</span> <span class="nav-text">12.7**将卷附加到实例**</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十三、安装虚拟机"><span class="nav-number">2.13.</span> <span class="nav-text">十三、安装虚拟机</span></a></li></ol></li></ol></div>
+            
+
           </div>
         </section>
       <!--/noindex-->
+      
+
+      
+
     </div>
   </aside>
+
+
+        
       </div>
     </main>
+
     <footer id="footer" class="footer">
       <script>
 (function(){
@@ -646,6 +1008,7 @@
 </script>
       <div class="footer-inner">
 		<div>
+    
   <span>Hosted by <a href="https://pages.coding.me" >Coding Pages</a></span>
 </div>
         <div>
@@ -656,50 +1019,191 @@
           a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);
           runtime_span.innerHTML="本站勉强运行: "+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script>
 </div>
+        
         <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="heart">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">欧阳 Blog</span>
+
+  
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
+    
       <span class="post-meta-item-text">Site words total count&#58;</span>
+    
     <span title="Site words total count">34.8k</span>
+  
 </div>
+
+
+
+
+
+
+
+
+
         <div>
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1275871225'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s5.cnzz.com/z_stat.php%3Fid%3D1275871225%26online%3D1%26show%3Dline' type='text/javascript'%3E%3C/script%3E"));</script>
 </div>
       </div>
     </footer>
+    
       <div class="back-to-top">
         <i class="fa fa-arrow-up"></i>
+        
           <span id="scrollpercent"><span>0</span>%</span>
+        
       </div>
+    
+
+    
   </div>
+  
+  
+  
+
 <script type="text/javascript">
   if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
     window.Promise = null;
   }
 </script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
     <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
     <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
     <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
     <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
     <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
     <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
     <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+  
+  
     <script id="ribbon" type="text/javascript" size="300" alpha="0.6"  zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  
+
+
+  
+
+
   <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
   <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
   <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
   <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
   <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
   <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
   <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
   <script type="text/javascript">
     var GUEST = ['nick','mail','link'];
     var guest = 'nick,mail,link';
@@ -718,6 +1222,11 @@
         pageSize:'10' || 10,
     });
   </script>
+
+
+
+  
+
   <script type="text/javascript">
     // Popup Window;
     var isfetched = false;
@@ -731,6 +1240,7 @@
     }
     var path = "/" + search_path;
     // monitor main search box;
+
     var onPopupClose = function (e) {
       $('.popup').hide();
       $('#local-search-input').val('');
@@ -739,6 +1249,7 @@
       $(".local-search-pop-overlay").remove();
       $('body').css('overflow', '');
     }
+
     function proceedsearch() {
       $("body")
         .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
@@ -750,9 +1261,11 @@
       $localSearchInput.attr("autocorrect", "off");
       $localSearchInput.focus();
     }
+
     // search function;
     var searchFunc = function(path, search_id, content_id) {
       'use strict';
+
       // start loading animation
       $("body")
         .append('<div class="search-popup-overlay local-search-pop-overlay">' +
@@ -762,6 +1275,7 @@
           '</div>')
         .css('overflow', 'hidden');
       $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
       $.ajax({
         url: path,
         dataType: isXml ? "xml" : "json",
@@ -818,6 +1332,7 @@
                       }
                       return index;
                     }
+
                     indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
                     indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
                   });
@@ -826,9 +1341,12 @@
                     hitCount = indexOfTitle.length + indexOfContent.length;
                   }
                 }
+
                 // show search results
+
                 if (isMatch) {
                   // sort index by position of keyword
+
                   [indexOfTitle, indexOfContent].forEach(function (index) {
                     index.sort(function (itemLeft, itemRight) {
                       if (itemRight.position !== itemLeft.position) {
@@ -838,7 +1356,9 @@
                       }
                     });
                   });
+
                   // merge hits into slices
+
                   function mergeIntoSlice(text, start, end, index) {
                     var item = index[index.length - 1];
                     var position = item.position;
@@ -851,7 +1371,9 @@
                       }
                       hits.push({position: position, length: word.length});
                       var wordEnd = position + word.length;
+
                       // move to next position of hit
+
                       index.pop();
                       while (index.length != 0) {
                         item = index[index.length - 1];
@@ -872,10 +1394,12 @@
                       searchTextCount: searchTextCountInSlice
                     };
                   }
+
                   var slicesOfTitle = [];
                   if (indexOfTitle.length != 0) {
                     slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
                   }
+
                   var slicesOfContent = [];
                   while (indexOfContent.length != 0) {
                     var item = indexOfContent[indexOfContent.length - 1];
@@ -895,7 +1419,9 @@
                     }
                     slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
                   }
+
                   // sort slices in content by search text's count and hits' count
+
                   slicesOfContent.sort(function (sliceLeft, sliceRight) {
                     if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
                       return sliceRight.searchTextCount - sliceLeft.searchTextCount;
@@ -905,12 +1431,16 @@
                       return sliceLeft.start - sliceRight.start;
                     }
                   });
+
                   // select top N slices in content
+
                   var upperBound = parseInt('1');
                   if (upperBound >= 0) {
                     slicesOfContent = slicesOfContent.slice(0, upperBound);
                   }
+
                   // highlight title and content
+
                   function highlightKeyword(text, slice) {
                     var result = '';
                     var prevEnd = slice.start;
@@ -923,17 +1453,21 @@
                     result += text.substring(prevEnd, slice.end);
                     return result;
                   }
+
                   var resultItem = '';
+
                   if (slicesOfTitle.length != 0) {
                     resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
                   } else {
                     resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
                   }
+
                   slicesOfContent.forEach(function (slice) {
                     resultItem += "<a href='" + articleUrl + "'>" +
                       "<p class=\"search-result\">" + highlightKeyword(content, slice) +
                       "...</p>" + "</a>";
                   });
+
                   resultItem += "</li>";
                   resultItems.push({
                     item: resultItem,
@@ -966,6 +1500,7 @@
               resultContent.innerHTML = searchResultList;
             }
           }
+
           if ('auto' === 'auto') {
             input.addEventListener('input', inputEventFunction);
           } else {
@@ -976,13 +1511,16 @@
               }
             });
           }
+
           // remove loading animation
           $(".local-search-pop-overlay").remove();
           $('body').css('overflow', '');
+
           proceedsearch();
         }
       });
     }
+
     // handle and trigger popup window;
     $('.popup-trigger').click(function(e) {
       e.stopPropagation();
@@ -992,6 +1530,7 @@
         proceedsearch();
       };
     });
+
     $('.popup-btn-close').click(onPopupClose);
     $('.popup').click(function(e){
       e.stopPropagation();
@@ -1004,6 +1543,16 @@
       }
     });
   </script>
+
+
+
+
+
+  
+
+  
+
+  
 <script>
 (function(){
     var bp = document.createElement('script');
@@ -1018,6 +1567,17 @@
     s.parentNode.insertBefore(bp, s);
 })();
 </script>
+
+
+  
+  
+
+  
+
+  
+
+  
+ 
      <script>var OriginTitile=document.title; var st; document.addEventListener('visibilitychange',function(){ if(document.hidden){ document.title="(つェ⊂)浏览器崩溃了"; clearTimeout(st); console.log('hide'); }else{ document.title='(*´∇｀*)吖~又好了~ '+OriginTitile; console.log('show'); st=setTimeout(function(){ document.title=OriginTitile; },2000); console.log('endChange='); } });</script>
    <script>(function(){
 	var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?a03b6dd0b165fe598b2e4f4f456fccda":"https://jspassport.ssl.qhimg.com/11.0.1.js?a03b6dd0b165fe598b2e4f4f456fccda";
@@ -1026,3 +1586,5 @@
 	</script>
 <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":50,"height":100},"mobile":{"show":false},"log":false});</script></body>
 </html>
+
+

@@ -1,26 +1,98 @@
 <!DOCTYPE html>
+
+
+
+  
+
+
 <html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
 <meta http-equiv="Cache-Control" content="no-transform" />
 <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
   <meta name="google-site-verification" content="dYiRwj1ulGaUvTQRrCjJA9YKnNF8JN4wRKXzdbE6wBc" />
+
+
+
   <meta name="msvalidate.01" content="true" />
+
+
+
   <meta name="yandex-verification" content="true" />
+
+
+
+
   <meta name="baidu-site-verification" content="{ theme.baidu_site_verification }" />
+
+
+
+
   <meta name="360-site-verification" content="theme.qihu_site_verification" />
+
+
+
+
+  
+  
   <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
 <link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
 <link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
   <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
   <meta name="keywords" content="HBase,Sql,SHC," />
+
+
+
+
+
   <link rel="alternate" href="/atom.xml" title="欧阳博客" type="application/atom+xml" />
+
+
+
+
+
+
 <meta name="description" content="Apache Spark 和 Apache HBase 是两个使用比较广泛的大数据组件。很多场景需要使用 Spark 分析/查询 HBase 中的数据，而目前 Spark 内置是支持很多数据源的，其中就包括了 HBase，但是内置的读取数据源还是使用了 TableInputFormat 来读取 HBase 中的数据。这个 TableInputFormat 有一些缺点：  一个 Task 里面只能启">
 <meta name="keywords" content="HBase,Sql,SHC">
 <meta property="og:type" content="article">
@@ -36,6 +108,9 @@
 <meta name="twitter:title" content="SHC：使用 Spark SQL 高效地读写 HBase">
 <meta name="twitter:description" content="Apache Spark 和 Apache HBase 是两个使用比较广泛的大数据组件。很多场景需要使用 Spark 分析/查询 HBase 中的数据，而目前 Spark 内置是支持很多数据源的，其中就包括了 HBase，但是内置的读取数据源还是使用了 TableInputFormat 来读取 HBase 中的数据。这个 TableInputFormat 有一些缺点：  一个 Task 里面只能启">
 <meta name="twitter:image" content="http://yun.name168.cn/shc_get-5658pw.png">
+
+
+
 <script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
@@ -59,15 +134,41 @@
     }
   };
 </script>
+
+
+
   <link rel="canonical" href="https://www.5658.pw/2019/04/02/SHC：使用-Spark-SQL-高效地读写-HBase/"/>
+
+
+
+
+
   <title>SHC：使用 Spark SQL 高效地读写 HBase | 欧阳博客</title>
+  
+
+
+
+
+
+
+
+
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
   <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
+
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
+    
+
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
@@ -75,8 +176,11 @@
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
+      
         <h1 class="site-subtitle" itemprop="description">三分孤独,七分狂傲</h1>
+      
   </div>
+
   <div class="site-nav-toggle">
     <button>
       <span class="btn-bar"></span>
@@ -85,58 +189,102 @@
     </button>
   </div>
 </div>
+
 <nav class="site-nav">
+  
+
+  
     <ul id="menu" class="menu">
+      
+        
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
+            
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
             首页
           </a>
         </li>
+      
+        
         <li class="menu-item menu-item-tags">
           <a href="/tags/" rel="section">
+            
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
             标签
           </a>
         </li>
+      
+        
         <li class="menu-item menu-item-categories">
           <a href="/categories/" rel="section">
+            
               <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
             分类
           </a>
         </li>
+      
+        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
+            
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
             归档
           </a>
         </li>
+      
+        
         <li class="menu-item menu-item-resources">
           <a href="/buddy" rel="section">
+            
               <i class="menu-item-icon fa fa-fw fa-american-sign-language-interpreting"></i> <br />
+            
             小伙伴
           </a>
         </li>
+      
+        
         <li class="menu-item menu-item-娱乐">
           <a href="/entertainment" rel="section">
+            
               <i class="menu-item-icon fa fa-fw fa-gamepad"></i> <br />
+            
             娱乐
           </a>
         </li>
+      
+        
         <li class="menu-item menu-item-about">
           <a href="/about/" rel="section">
+            
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
             关于
           </a>
         </li>
+      
+
+      
         <li class="menu-item menu-item-search">
+          
             <a href="javascript:;" class="popup-trigger">
+          
+            
               <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
             搜索
           </a>
         </li>
+      
     </ul>
+  
+
+  
     <div class="site-search">
+      
   <div class="popup search-popup local-search-popup">
   <div class="local-search-header clearfix">
     <span class="search-icon">
@@ -153,50 +301,110 @@
   </div>
   <div id="local-search-result"></div>
 </div>
+
+
+
     </div>
+  
 </nav>
+
+
+
  </div>
     </header>
+
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
           <div id="content" class="content">
+            
+
   <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
   <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.5658.pw/2019/04/02/SHC：使用-Spark-SQL-高效地读写-HBase/">
+
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="欧阳 Blog">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.png">
     </span>
+
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="欧阳博客">
     </span>
+
+    
       <header class="post-header">
+
+        
+        
           <h2 class="post-title" itemprop="name headline">SHC：使用 Spark SQL 高效地读写 HBase</h2>
+        
+
         <div class="post-meta">
           <span class="post-time">
+            
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
+              
                 <span class="post-meta-item-text">发表于</span>
+              
               <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-02T11:46:56+08:00">
                 2019-04-02
               </time>
+            
+
+            
+
+            
           </span>
+ 
+
+
+             
+
+
+          
+          
             <span class="post-category" >
+            
               <span class="post-meta-divider">|</span>
+            
+            
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
+              
                 <span class="post-meta-item-text">分类于</span>
+              
+              
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/HBase/" itemprop="url" rel="index">
                     <span itemprop="name">HBase</span>
                   </a>
                 </span>
+
+                
+                
+              
             </span>
+          
+
+          
+            
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
@@ -206,30 +414,67 @@
                   <span class="post-comments-count valine-comment-count" data-xid="/2019/04/02/SHC：使用-Spark-SQL-高效地读写-HBase/" itemprop="commentCount"></span>
                 </a>
               </span>
+            
+          
+
+          
+          
+
+          
             <span class="post-meta-divider">|</span>
             <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
             <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
             </span>
+          
+
+          
             <div class="post-wordcount">
+              
+                
                 <span class="post-meta-item-icon">
                   <i class="fa fa-file-word-o"></i>
                 </span>
+                
                   <span class="post-meta-item-text">字数统计&#58;</span>
+                
                 <span title="字数统计">
                   2.5k
                 </span>
+              
+
+              
                 <span class="post-meta-divider">|</span>
+              
+
+              
                 <span class="post-meta-item-icon">
                   <i class="fa fa-clock-o"></i>
                 </span>
+                
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
                 <span title="阅读时长">
                   11
                 </span>
+              
             </div>
+          
+
+          
+
         </div>
       </header>
+    
+
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
         <p>Apache <a href="https://www.iteblog.com/archives/tag/spark/" target="_blank" rel="noopener">Spark</a> 和 Apache <a href="https://www.iteblog.com/archives/tag/hbase/" target="_blank" rel="noopener">HBase</a> 是两个使用比较广泛的大数据组件。很多场景需要使用 <a href="https://www.iteblog.com/archives/tag/spark/" target="_blank" rel="noopener">Spark</a> 分析/查询 <a href="https://www.iteblog.com/archives/tag/hbase/" target="_blank" rel="noopener">HBase</a> 中的数据，而目前 <a href="https://www.iteblog.com/archives/tag/spark/" target="_blank" rel="noopener">Spark</a> 内置是支持很多数据源的，其中就包括了 <a href="https://www.iteblog.com/archives/tag/hbase/" target="_blank" rel="noopener">HBase</a>，但是内置的读取数据源还是使用了 TableInputFormat 来读取 HBase 中的数据。这个 TableInputFormat 有一些缺点：</p>
 <ul>
 <li>一个 Task 里面只能启动一个 Scan 去 HBase 中读取数据；</li>
@@ -282,7 +527,16 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`df.sqlContext.sql(``&quot;select col00, col01, col1 from iteblog where col00 &gt; &apos;row000&apos; and col00 &lt; &apos;row005&apos;&quot;``).show()`</span><br></pre></td></tr></table></figure>
 <p>这个在 shc 里面转换成 HBase 的过滤为一条 get 和 一个 scan，具体为 get 的 Rowkey 为 row0005\xff\xff\xff\xff；scan 的 startRow 为 row000，endRow 为 row005\xff\xff\xff\xff，然后将查询的结果返回到 spark 层面上进行过滤。</p>
 <p>总体来说，shc 能在一定程度上对查询进行优化，避免了全表扫描。但是经过评测，shc 其实还有很多地方不够完善，算子下沉并没有下沉到 HBase 层面上进行。目前这个项目正在和 hbase 自带的 connectors 进行整合</p>
+
+      
     </div>
+    
+    
+    
+
+    
+
+    
       <div>
         <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
   <div></div>
@@ -290,17 +544,30 @@
     <span>打赏</span>
   </button>
   <div id="QR" style="display: none;">
+
+    
       <div id="wechat" style="display: inline-block">
         <img id="wechat_qr" src="/images/wechatpay.png" alt="欧阳 Blog 微信支付"/>
         <p>微信支付</p>
       </div>
+    
+
+    
       <div id="alipay" style="display: inline-block">
         <img id="alipay_qr" src="/images/alipay.jpg" alt="欧阳 Blog 支付宝"/>
         <p>支付宝</p>
       </div>
+    
+
+    
+
   </div>
 </div>
+
       </div>
+    
+
+    
       <div>
         <ul class="post-copyright">
   <li class="post-copyright-author">
@@ -316,36 +583,83 @@
     本博客所有文章除特别声明外，均采用 <a href="https://5658.pw" rel="external nofollow" target="_blank">CC BY-OuYang</a> 许可协议。转载请注明出处！
   </li>
 </ul>
+
       </div>
+    
+
     <footer class="post-footer">
+      
         <div class="post-tags">
+          
             <a href="/tags/HBase/" rel="tag"># HBase</a>
+          
             <a href="/tags/Sql/" rel="tag"># Sql</a>
+          
             <a href="/tags/SHC/" rel="tag"># SHC</a>
+          
         </div>
+      
+
+      
+      
+      
+
+      
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
+            
               <a href="/2019/03/25/Centos7-mysql-5-6-数据库主主复制/" rel="next" title="Centos7 mysql 5.6 数据库主主复制">
                 <i class="fa fa-chevron-left"></i> Centos7 mysql 5.6 数据库主主复制
               </a>
+            
           </div>
+
           <span class="post-nav-divider"></span>
+
           <div class="post-nav-prev post-nav-item">
+            
               <a href="/2019/04/03/Redis批量getshell的方法/" rel="prev" title="Redis批量getshell的方法">
                 Redis批量getshell的方法 <i class="fa fa-chevron-right"></i>
               </a>
+            
           </div>
         </div>
+      
+
+      
+      
     </footer>
   </div>
+  
+  
+  
   </article>
+
+
+
     <div class="post-spread">
+      
     </div>
   </div>
+
+
           </div>
+          
+
+
+          
+
+  
     <div class="comments" id="comments">
     </div>
+  
+
+
+
         </div>
+        
+          
+  
   <div class="sidebar-toggle">
     <div class="sidebar-toggle-line-wrap">
       <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
@@ -353,8 +667,14 @@
       <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
   </div>
+
   <aside id="sidebar" class="sidebar">
+    
     <div class="sidebar-inner">
+
+      
+
+      
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
@@ -363,66 +683,125 @@
             站点概览
           </li>
         </ul>
+      
+
       <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
 	<a href="/">
               <img class="site-author-image" itemprop="image"
                 src="/images/avatar.png"
                 alt="欧阳 Blog" />
 	</a>
+            
               <p class="site-author-name" itemprop="name">欧阳 Blog</p>
               <p class="site-description motion-element" itemprop="description"></p>
           </div>
+
           <nav class="site-state motion-element">
+
+            
               <div class="site-state-item site-state-posts">
+              
                 <a href="/archives/">
+              
                   <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
+            
+
+            
+              
+              
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
                   <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
+            
+
+            
+              
+              
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
                   <span class="site-state-item-count">64</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
+            
+
           </nav>
+
+          
             <div class="feed-link motion-element">
               <a href="/atom.xml" rel="alternate">
                 <i class="fa fa-rss"></i>
                 RSS
               </a>
             </div>
+          
+
+          
             <div class="links-of-author motion-element">
+                
                   <span class="links-of-author-item">
                     <a href="https://www.5658.pw" target="_blank" title="QQ">
+                      
                         <i class="fa fa-fw fa-qq"></i>QQ</a>
                   </span>
+                
                   <span class="links-of-author-item">
                     <a href="mailto:dash6@foxmail.com" target="_blank" title="E-Mail">
+                      
                         <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
                   </span>
+                
             </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
         </div>
       </section>
+
+      
       <!--noindex-->
         <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
           <div class="post-toc">
+
+            
+              
+            
+
+            
               <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SHC-是如何实现查询优化的呢"><span class="nav-number">1.</span> <span class="nav-text">SHC 是如何实现查询优化的呢</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#将使用-Rowkey-的查询转换成-get-查询"><span class="nav-number">1.1.</span> <span class="nav-text">将使用 Rowkey 的查询转换成 get 查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合-RowKey-的查询优化"><span class="nav-number">2.</span> <span class="nav-text">组合 RowKey 的查询优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#scan-查询优化"><span class="nav-number">3.</span> <span class="nav-text">scan 查询优化</span></a></li></ol></div>
+            
+
           </div>
         </section>
       <!--/noindex-->
+      
+
+      
+
     </div>
   </aside>
+
+
+        
       </div>
     </main>
+
     <footer id="footer" class="footer">
       <script>
 (function(){
@@ -440,6 +819,7 @@
 </script>
       <div class="footer-inner">
 		<div>
+    
   <span>Hosted by <a href="https://pages.coding.me" >Coding Pages</a></span>
 </div>
         <div>
@@ -450,50 +830,191 @@
           a=T/M;A=Math.floor(a);b=(a-A)*24;B=Math.floor(b);c=(b-B)*60;C=Math.floor((b-B)*60);D=Math.floor((c-C)*60);
           runtime_span.innerHTML="本站勉强运行: "+A+"天"+B+"小时"+C+"分"+D+"秒"}show_runtime();</script>
 </div>
+        
         <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="heart">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">欧阳 Blog</span>
+
+  
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
+    
       <span class="post-meta-item-text">Site words total count&#58;</span>
+    
     <span title="Site words total count">34.8k</span>
+  
 </div>
+
+
+
+
+
+
+
+
+
         <div>
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1275871225'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s5.cnzz.com/z_stat.php%3Fid%3D1275871225%26online%3D1%26show%3Dline' type='text/javascript'%3E%3C/script%3E"));</script>
 </div>
       </div>
     </footer>
+    
       <div class="back-to-top">
         <i class="fa fa-arrow-up"></i>
+        
           <span id="scrollpercent"><span>0</span>%</span>
+        
       </div>
+    
+
+    
   </div>
+  
+  
+  
+
 <script type="text/javascript">
   if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
     window.Promise = null;
   }
 </script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
     <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
     <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
     <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
     <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
     <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
     <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
     <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+  
+  
     <script id="ribbon" type="text/javascript" size="300" alpha="0.6"  zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  
+
+
+  
+
+
   <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
   <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
   <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
   <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
   <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
   <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
   <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
   <script type="text/javascript">
     var GUEST = ['nick','mail','link'];
     var guest = 'nick,mail,link';
@@ -512,6 +1033,11 @@
         pageSize:'10' || 10,
     });
   </script>
+
+
+
+  
+
   <script type="text/javascript">
     // Popup Window;
     var isfetched = false;
@@ -525,6 +1051,7 @@
     }
     var path = "/" + search_path;
     // monitor main search box;
+
     var onPopupClose = function (e) {
       $('.popup').hide();
       $('#local-search-input').val('');
@@ -533,6 +1060,7 @@
       $(".local-search-pop-overlay").remove();
       $('body').css('overflow', '');
     }
+
     function proceedsearch() {
       $("body")
         .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
@@ -544,9 +1072,11 @@
       $localSearchInput.attr("autocorrect", "off");
       $localSearchInput.focus();
     }
+
     // search function;
     var searchFunc = function(path, search_id, content_id) {
       'use strict';
+
       // start loading animation
       $("body")
         .append('<div class="search-popup-overlay local-search-pop-overlay">' +
@@ -556,6 +1086,7 @@
           '</div>')
         .css('overflow', 'hidden');
       $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
       $.ajax({
         url: path,
         dataType: isXml ? "xml" : "json",
@@ -612,6 +1143,7 @@
                       }
                       return index;
                     }
+
                     indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
                     indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
                   });
@@ -620,9 +1152,12 @@
                     hitCount = indexOfTitle.length + indexOfContent.length;
                   }
                 }
+
                 // show search results
+
                 if (isMatch) {
                   // sort index by position of keyword
+
                   [indexOfTitle, indexOfContent].forEach(function (index) {
                     index.sort(function (itemLeft, itemRight) {
                       if (itemRight.position !== itemLeft.position) {
@@ -632,7 +1167,9 @@
                       }
                     });
                   });
+
                   // merge hits into slices
+
                   function mergeIntoSlice(text, start, end, index) {
                     var item = index[index.length - 1];
                     var position = item.position;
@@ -645,7 +1182,9 @@
                       }
                       hits.push({position: position, length: word.length});
                       var wordEnd = position + word.length;
+
                       // move to next position of hit
+
                       index.pop();
                       while (index.length != 0) {
                         item = index[index.length - 1];
@@ -666,10 +1205,12 @@
                       searchTextCount: searchTextCountInSlice
                     };
                   }
+
                   var slicesOfTitle = [];
                   if (indexOfTitle.length != 0) {
                     slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
                   }
+
                   var slicesOfContent = [];
                   while (indexOfContent.length != 0) {
                     var item = indexOfContent[indexOfContent.length - 1];
@@ -689,7 +1230,9 @@
                     }
                     slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
                   }
+
                   // sort slices in content by search text's count and hits' count
+
                   slicesOfContent.sort(function (sliceLeft, sliceRight) {
                     if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
                       return sliceRight.searchTextCount - sliceLeft.searchTextCount;
@@ -699,12 +1242,16 @@
                       return sliceLeft.start - sliceRight.start;
                     }
                   });
+
                   // select top N slices in content
+
                   var upperBound = parseInt('1');
                   if (upperBound >= 0) {
                     slicesOfContent = slicesOfContent.slice(0, upperBound);
                   }
+
                   // highlight title and content
+
                   function highlightKeyword(text, slice) {
                     var result = '';
                     var prevEnd = slice.start;
@@ -717,17 +1264,21 @@
                     result += text.substring(prevEnd, slice.end);
                     return result;
                   }
+
                   var resultItem = '';
+
                   if (slicesOfTitle.length != 0) {
                     resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
                   } else {
                     resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
                   }
+
                   slicesOfContent.forEach(function (slice) {
                     resultItem += "<a href='" + articleUrl + "'>" +
                       "<p class=\"search-result\">" + highlightKeyword(content, slice) +
                       "...</p>" + "</a>";
                   });
+
                   resultItem += "</li>";
                   resultItems.push({
                     item: resultItem,
@@ -760,6 +1311,7 @@
               resultContent.innerHTML = searchResultList;
             }
           }
+
           if ('auto' === 'auto') {
             input.addEventListener('input', inputEventFunction);
           } else {
@@ -770,13 +1322,16 @@
               }
             });
           }
+
           // remove loading animation
           $(".local-search-pop-overlay").remove();
           $('body').css('overflow', '');
+
           proceedsearch();
         }
       });
     }
+
     // handle and trigger popup window;
     $('.popup-trigger').click(function(e) {
       e.stopPropagation();
@@ -786,6 +1341,7 @@
         proceedsearch();
       };
     });
+
     $('.popup-btn-close').click(onPopupClose);
     $('.popup').click(function(e){
       e.stopPropagation();
@@ -798,6 +1354,16 @@
       }
     });
   </script>
+
+
+
+
+
+  
+
+  
+
+  
 <script>
 (function(){
     var bp = document.createElement('script');
@@ -812,6 +1378,17 @@
     s.parentNode.insertBefore(bp, s);
 })();
 </script>
+
+
+  
+  
+
+  
+
+  
+
+  
+ 
      <script>var OriginTitile=document.title; var st; document.addEventListener('visibilitychange',function(){ if(document.hidden){ document.title="(つェ⊂)浏览器崩溃了"; clearTimeout(st); console.log('hide'); }else{ document.title='(*´∇｀*)吖~又好了~ '+OriginTitile; console.log('show'); st=setTimeout(function(){ document.title=OriginTitile; },2000); console.log('endChange='); } });</script>
    <script>(function(){
 	var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?a03b6dd0b165fe598b2e4f4f456fccda":"https://jspassport.ssl.qhimg.com/11.0.1.js?a03b6dd0b165fe598b2e4f4f456fccda";
@@ -820,3 +1397,5 @@
 	</script>
 <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":50,"height":100},"mobile":{"show":false},"log":false});</script></body>
 </html>
+
+
